@@ -1,0 +1,29 @@
+{
+  "name": "28-stu_mini-project",
+  "version": "1.0.1",
+  "description": "Mongoose back-end project - Main",
+  "main": "index.js",
+  "license": "MIT",
+  "scripts": {
+    "start": "node index",
+    "dev": "nodemon index",
+    "seed": "node utils/seed",
+    "heroku-postbuild": "node utils/seed.js"
+  },
+  "dependencies": {
+    "express": "^4.17.3",
+    "mongoose": "^6.2.8"
+  },
+  "devDependencies": {
+    "nodemon": "^2.0.9"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/CBCutGitHub/A-Penny-For-Your-Thoughts.git"
+  },
+  "author": "",
+  "bugs": {
+    "url": "https://github.com/CBCutGitHub/A-Penny-For-Your-Thoughts/issues"
+  },
+  "homepage": "https://github.com/CBCutGitHub/A-Penny-For-Your-Thoughts#readme"
+}
