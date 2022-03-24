@@ -65,4 +65,33 @@ module.exports = {
       )
       .catch((err) => res.status(500).json(err));
   },
-};
+
+createReaction(req, res) {
+  Thoughts.findOneAndUpdate(
+    { _id: req.params.ThoughtsId },
+    { $addToSet: { reaction: req.body } },
+    { runValidators: true, new: true }
+  )
+    .then((thoughts) => {
+      res.json(thoughts);
+    })
+    .catch((err) => {
+      console.log(err);
+      res.status(500).json(err);
+    });
+},
+// delete reaction from a thought
+deleteReaction(req, res) {
+  Thoughts.findOneAndUpdate(
+    { _id: req.params.ThoughtsId },
+    { $pull: { reaction: { reactionId: req.params.reactionId } } },
+    { runValidators: true, new: true }
+  )
+    .then((reactions) => {
+      res.json(reactions);
+    })
+    .catch((err) => {
+      console.log(err);
+      res.status(500).json(err);
+    });
+}}
