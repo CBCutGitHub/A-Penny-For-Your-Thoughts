@@ -1,54 +1,67 @@
-const { Course, Student } = require('../models');
+const { Thoughts, User } = require('../models');
 
 module.exports = {
-  // Get all courses
-  getCourses(req, res) {
-    Course.find()
-      .then((courses) => res.json(courses))
+  // Get all Thoughts
+  getThoughts(req, res) {
+    Thoughts.find()
+      .then((thoughts) => res.json(thoughts))
       .catch((err) => res.status(500).json(err));
   },
-  // Get a course
-  getSingleCourse(req, res) {
-    Course.findOne({ _id: req.params.courseId })
+  // Get a single Thoughts
+  getSingleThoughts(req, res) {
+    Thoughts.findOne({ _id: req.params.ThoughtsId })
       .select('-__v')
-      .then((course) =>
-        !course
-          ? res.status(404).json({ message: 'No course with that ID' })
-          : res.json(course)
+  //we added populate on user line 19-20
+      .then((thoughts) =>
+        !thoughts
+          ? res.status(404).json({ message: 'No thoughts with that ID' })
+          : res.json(thoughts)
       )
       .catch((err) => res.status(500).json(err));
   },
-  // Create a course
-  createCourse(req, res) {
-    Course.create(req.body)
-      .then((course) => res.json(course))
+  // Create a new Thoughts
+  createThoughts(req, res) {
+    Thoughts.create(req.body)
+      .then((thoughts) =>{
+        User.findOneAndUpdate(
+          {_id:req.body.userId},
+        {$push:{thoughts: thoughts._id}},
+        {new: true}
+        )
+        }).then(thoughts=>{
+          res.json(thoughts)
+        })
       .catch((err) => {
         console.log(err);
         return res.status(500).json(err);
       });
   },
-  // Delete a course
-  deleteCourse(req, res) {
-    Course.findOneAndDelete({ _id: req.params.courseId })
-      .then((course) =>
-        !course
-          ? res.status(404).json({ message: 'No course with that ID' })
-          : Student.deleteMany({ _id: { $in: course.students } })
+  // Delete a Thoughts
+  deleteThoughts(req, res) {
+    Thoughts.findOneAndDelete({ _id: req.params.ThoughtsId })
+      .then((Thoughts) =>
+    User.findOneAndUpdate(
+      {thoughts: req.params.ThoughtsId},
+      {$pull: {thoughts:req.params.ThoughtsId}},
+      {new: true}
       )
-      .then(() => res.json({ message: 'Course and students deleted!' }))
+      )
+      //  .then(() => res.json({ message: 'Course and students deleted!' }))
+      .then(() => res.json({ message: 'Thoughts and user deleted!' }))
       .catch((err) => res.status(500).json(err));
   },
-  // Update a course
-  updateCourse(req, res) {
-    Course.findOneAndUpdate(
-      { _id: req.params.courseId },
+  // Update a thoughts
+  updateThoughts(req, res) {
+    Thoughts.findOneAndUpdate(
+      { _id: req.params.ThoughtsId },
       { $set: req.body },
+//Are we keeping the runValidator?
       { runValidators: true, new: true }
     )
-      .then((course) =>
-        !course
-          ? res.status(404).json({ message: 'No course with this id!' })
-          : res.json(course)
+      .then((thoughts) =>
+        !thoughts
+          ? res.status(404).json({ message: 'No Thoughts with this id!' })
+          : res.json(thoughts)
       )
       .catch((err) => res.status(500).json(err));
   },

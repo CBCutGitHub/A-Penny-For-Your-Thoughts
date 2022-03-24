@@ -78,7 +78,8 @@ module.exports = {
       { runValidators: true, new: true }
     )
       .then((friend) =>
-      res.json(friend)
+    //Did a ctl+z; not sure if a change
+      res.json(friendstudent)
       )
       .catch((err) => res.status(500).json(err));
   },
